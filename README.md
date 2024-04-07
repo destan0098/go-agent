@@ -38,7 +38,7 @@ USAGE Example :
   import "github.com/destan0098/go-agent"
   
   func main(){
-    	userAgent := go-agent.Useragent(true)
+    	userAgent := go_agent.Useragent(true)
     	fmt.Println(userAgent)
   }
 
