@@ -52,7 +52,7 @@ USAGE Example :
 
 ## Features
 
-This Tool extact ip info and save it in csv , json and excel file
+This Tool Create random user agent for web browsing
 
  
 
