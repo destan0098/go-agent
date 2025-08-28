@@ -3,43 +3,50 @@ package go_agent
 import (
 	"bufio"
 	_ "embed"
-	"log"
 	"math/rand"
-	"os"
+	"strings"
+	"sync"
 	"time"
 )
 
 //go:embed internal/UserAgent.txt
 var textFileContent string
 
+var (
+	agents []string
+	once   sync.Once
+
+	rng = rand.New(rand.NewSource(time.Now().UnixNano()))
+	mu  sync.Mutex
+)
+
+func initAgents() {
+	sc := bufio.NewScanner(strings.NewReader(textFileContent))
+	for sc.Scan() {
+		line := strings.TrimSpace(sc.Text())
+		if line == "" {
+			continue
+		}
+		agents = append(agents, line)
+	}
+}
+
+// Useragent وقتی rnd=true باشد یک یوزر ایجنت رندوم از فایل می‌دهد.
+// اگر rnd=false باشد مقدار fallback را برمی‌گرداند.
 func Useragent(rnd bool) string {
-	var randomagent string
-	var agent []string
-	agentfile := textFileContent
-	if rnd {
-		file, err := os.Open(agentfile)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer func(file *os.File) {
-			err := file.Close()
-			if err != nil {
-				log.Println(err)
-			}
-		}(file)
-		scanner := bufio.NewScanner(file)
-		for scanner.Scan() {
-			agent = append(agent, scanner.Text())
-		}
-		if err := scanner.Err(); err != nil {
-			log.Fatal(err)
-		}
-		rand.Seed(time.Now().UnixNano())
-		randIdx := rand.Intn(len(agent))
-		randomagent = agent[randIdx]
-	} else {
-		randomagent = "BasicAgent"
+	once.Do(initAgents)
+
+	if len(agents) == 0 {
+		return "BasicAgent"
 	}
 
-	return randomagent
+	if rnd {
+		mu.Lock()
+		idx := rng.Intn(len(agents))
+		mu.Unlock()
+		return agents[idx]
+	}
+
+	// fallback ثابت
+	return "BasicAgent"
 }
