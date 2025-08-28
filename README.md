@@ -25,7 +25,9 @@ This tool is for training.
 ## Installation
 
 ```
-go get -u https://github.com/destan0098/go-agent
+go get -u github.com/destan0098/go-agent
+
+
 ```
 
 
