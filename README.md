@@ -1,10 +1,10 @@
-﻿# This Tool extact ip info and save it in csv , json and excel file
+﻿# This Tool make random user agent to use in your programs for web browsing
 
 
 ![Static Badge](https://img.shields.io/badge/Go-100%25-brightgreen)
 ## Description
 
-This Package Use For change User Gent in web Browsing
+This Package Use For change User agent in web Browsing
 This package give for you a random agent
 
 This tool is for training.
